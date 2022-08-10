@@ -1,6 +1,10 @@
 /* css/style.css */
+* {
+    color: rgb(180, 180, 180);
+}
+
 body {
-    background-color: rgb(54, 54, 54);
+    background-color: rgb(64, 64, 64);
     color: rgb(107, 107, 107);
 }
 
@@ -10,54 +14,22 @@ body {
     color: rgb(255, 255, 255);
     justify-content: center;
     align-items: center;
-    /* border: 1px solid rgb(0, 0, 0); */
     background-color: rgb(62, 62, 62);
     width: 100px;
     height: 100px;
 }
 
 .titleCell {
-    /* font-family:'Times New Roman', Times, serif; */
     background-color: rgb(154, 4, 4);
-}
-
-.completedCard {
-    background-color: rgb(254, 86, 86);
 }
 
 .cardNumRange {
     font-size: 2rem;
-    background-color: rgb(37, 37, 37);
-    color: rgb(142, 142, 142);
 }
-
-#displayBoard {
-    font-size: 2rem;
-    display: grid;
-    grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto;
-    margin: 1em;
-}
-
-#displayboard, #displayNum {
-    background-color: rgb(37, 37, 37);
-    color: rgb(142, 142, 142);
-}
-
-/* .cardContent{
-    display: grid;
-    grid-template-columns: auto auto auto auto auto;
-    grid-auto-rows: 4rem;
-    max-width: 500px;
-} */
 
 .red {
    background-color: red;
    font-size: 2rem;
-   color: rgb(142, 142, 142);
-}
-
-#cards {
-    text-align: center;
 }
 
 .playerCard {
@@ -76,12 +48,20 @@ body {
     color: rgb(223, 0, 0);
 }
 
-#reset {
-    height: 1rem;
-    background-color: rgb(0, 71, 5);
-    color: rgb(255, 255, 255);
+#cards {
+    text-align: center;
 }
 
+#displayBoard {
+    font-size: 2rem;
+    display: grid;
+    grid-template-columns: auto auto auto auto auto auto auto auto auto auto auto auto auto auto auto;
+    margin: 1em;
+}
+
+#displayboard, #displayNum, .cardNumRange {
+    background-color: rgb(37, 37, 37);
+}
 
 #displayNum {
     font-size: 10em;

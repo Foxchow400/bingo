@@ -42,15 +42,14 @@ function makeRange(start, end) {
 function updateNum() {
     // TODO: Prevent rolling numbers that were already called
     if (callList.length != 1) {
-    document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + callList[0] + "</button>";
-    document.getElementById("master" + callList[0]).style.backgroundColor = "red";
-    callList.splice(0, 1)
-    iter += 1;
+        document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + callList[0] + "</button>";
+        document.getElementById("master" + callList[0]).style.backgroundColor = "red";
+        callList.splice(0, 1)
+        iter += 1;
     } else {
         document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='reset()'>Oops!</button>";
         // document.getElementsByClassName("cardNumRange").style.backgroundColor = "red";
         document.getElementById("master" + callList[0]).className = "red";
-
     }
     console.log(callList);
 };
@@ -106,14 +105,11 @@ function createRanges() {
 // generates called number button, master number list and player cards
 function makeGrid() {
     var masterList = "";
-
     document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + cardNum() + "</button>";
-
     // generates the list for the master list
     for (i = 1; i < 76; i++) { 
         masterList += "<button class='cardNumRange' id='master" + i + "'>" + i + "</button>";
     }
-
     document.getElementById('displayBoard').innerHTML = masterList;
 }
 
@@ -157,7 +153,6 @@ function generateCards(numCards) {
         for (space = 0; space < 25; space++) {
             if (space != 12) {
                 // NORMAL SPACE
-                // console.log(callList);
                 currentCard += "<button class='playerGridCell' id='" + i + "_" + randomNumberList[space % 5][Math.floor(space / 5)] + "' onclick=''>" + randomNumberList[space % 5][Math.floor(space / 5)] + "</button>"; // TODO: Add an onclick event to the card buttons
             } else {
                 // FREE SPACE
@@ -173,6 +168,6 @@ function generateCards(numCards) {
 }
 rolledNumRange();
 createRanges();
-makeGrid();
 // generate cards
+makeGrid();
 generateCards(cardsToGenerate);
