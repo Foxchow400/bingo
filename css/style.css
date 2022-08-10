@@ -12,6 +12,7 @@ body {
     align-items: center;
     /* border: 1px solid rgb(0, 0, 0); */
     background-color: rgb(62, 62, 62);
+    width: 100px;
     height: 100px;
 }
 
@@ -35,26 +36,30 @@ body {
     margin: 1em;
 }
 
-.cardContent{
+/* .cardContent{
     display: grid;
     grid-template-columns: auto auto auto auto auto;
     grid-auto-rows: 4rem;
     max-width: 500px;
+} */
+
+#cards {
+    text-align: center;
 }
 
 .playerCard {
-    display: grid;
+    display: inline-grid;
     grid-template-columns: auto auto auto auto auto;
     text-align: center;
     justify-content: center;
     align-items: center;
-    margin: 1em;
     min-width: 340px;
     max-width: 500px;
+    margin: 1em;
 }
 
 .free {
-    font-size: 1.2rem;
+    font-size: 2rem;
     color: rgb(223, 0, 0);
 }
 
@@ -72,5 +77,6 @@ body {
 }
 
 #currentNum {
+    text-align: center;
     margin: 0 auto;
 }
