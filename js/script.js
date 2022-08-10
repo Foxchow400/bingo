@@ -47,7 +47,7 @@ function updateNum() {
         callList.splice(0, 1)
         iter += 1;
     } else {
-        document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='reset()'>Oops!</button>";
+        document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='reset()'>Game Over!</button>";
         // document.getElementsByClassName("cardNumRange").style.backgroundColor = "red";
         document.getElementById("master" + callList[0]).className = "red";
     }
