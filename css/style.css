@@ -42,17 +42,20 @@ body {
     max-width: 500px;
 }
 
-.cardContents {
+.playerCard {
     display: grid;
     grid-template-columns: auto auto auto auto auto;
-    max-width: 500px;
-}
-
-.playerCard {
     text-align: center;
     justify-content: center;
     align-items: center;
+    margin: 1em;
+    min-width: 340px;
+    max-width: 500px;
+}
 
+.free {
+    font-size: 1.2rem;
+    color: rgb(223, 0, 0);
 }
 
 #reset {
@@ -61,10 +64,6 @@ body {
     color: rgb(255, 255, 255);
 }
 
-#slot13 {
-    font-size: 1.2rem;
-    color: rgb(223, 0, 0);
-}
 
 #displayNum {
     font-size: 10em;

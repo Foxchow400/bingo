@@ -1,5 +1,7 @@
 // js/script.js
 
+const bingo = ['b','i','n','g','o'];
+
 // initialize master list ranges
 var bingoNumbersMasterList = [
     [], // B
@@ -8,6 +10,9 @@ var bingoNumbersMasterList = [
     [], // G
     []  // O
 ];
+
+// number of cards to generate
+var cardsToGenerate = 3;
 
 /* Generate new random number, update current BINGO number button display, and mark called number in master list */
 
@@ -22,30 +27,6 @@ function cardNum() {
 function makeRange(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx);
 };
-
-// generates random number lists
-// function playerCardNumberGeneration() {
-//     var playerNumB = (Math.floor(Math.random() * (15 - 1 + 1)) + 1);
-//     var playerNumI = (Math.floor(Math.random() * (30 - 16 + 1)) + 16);
-//     var playerNumN = (Math.floor(Math.random() * (45 - 31 + 1)) + 31);
-//     var playerNumG = (Math.floor(Math.random() * (60 - 46 + 1)) + 46);
-//     var playerNumO = (Math.floor(Math.random() * (75 - 61 + 1)) + 61);
-//     for (i = 0; i < 5; i++) {
-//         playerNumB += [(Math.floor(Math.random() * (15 - 1 + 1)) + 1)];
-//         playerNumI += [(Math.floor(Math.random() * (30 - 16 + 1)) + 16)];
-//         playerNumN += [(Math.floor(Math.random() * (45 - 31 + 1)) + 31)];
-//         playerNumG += [(Math.floor(Math.random() * (60 - 46 + 1)) + 46)];
-//         playerNumO += [(Math.floor(Math.random() * (75 - 61 + 1)) + 61)];
-
-//         playerCardNumberList[i] = playerNumB;
-//         playerCardNumberList[i] = playerNumI;
-//         playerCardNumberList[i] = playerNumN;
-//         playerCardNumberList[i] = playerNumG;
-//         playerCardNumberList[i] = playerNumO;
-//         console.log(playerNumB);
-//     }
-//     console.log(playerCardNumberList);
-// }
 
 // updates called number button value
 function updateNum() {
@@ -99,13 +80,11 @@ function createRanges() {
         var range = makeRange(start, stop);
         bingoNumbersMasterList[i] = range;
     }
-
-    console.log(bingoNumbersMasterList);
+    // console.log(bingoNumbersMasterList);
 }
 
 // generates called number button, master number list and player cards
 function makeGrid() {
-    var pCardGrid = "";
     var masterList = "";
 
     document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + cardNum() + "</button>";
@@ -115,42 +94,68 @@ function makeGrid() {
         masterList += "<button class='cardNumRange' id='master" + i + "'>" + i + "</button>";
     }
     document.getElementById('displayBoard').innerHTML = masterList;
+}
 
-    // generates the list for the master list
-    for (i = 1; i < 76; i++) { 
-        masterList += "<button class='cardNumRange' id='master" + i + "'>" + i + "</button>";
+function shuffleArray(arr) {
+    console.log(arr)
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
     }
-    document.getElementsByClassName('cardContents')[0].innerHTML = (
-        "<button class='titleCell'>B</button>" +
-        "<button class='titleCell'>I</button>" +
-        "<button class='titleCell'>N</button>" +
-        "<button class='titleCell'>G</button>" +
-        "<button class='titleCell'>O</button>" 
-    ); // card title
-        
-    for (i = 1; i < 26; i++) {
-        if (i < 6 ) {
-            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (15 - 1 + 1)) + 1) + "</button>";
-        }
-        if (i < 11 && i > 5) {
-            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (30 - 16 + 1)) + 16) + "</button>";
-        }
-        if (i < 16 && i > 10) {
-            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (45 - 31 + 1)) + 31) + "</button>";
-        }
-        if (i < 21 && i > 15) {
-            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (60 - 46 + 1)) + 46) + "</button>";
-        }
-        if (i < 26 && i > 20) {
-            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (75 - 61 + 1)) + 61) + "</button>";
-        }
-    }
-    // pCardGrid = "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + test + "</button>"
+}
 
-    // document.getElementsByClassName('cardContents')[0].innerHTML += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot1'>" + playerCardNumberList[0][0] + "</button>";
-    document.getElementsByClassName('cardContents')[0].innerHTML += pCardGrid;
-    document.querySelector("#slot13").innerHTML = "FREE";
+// generate randomized player cards
+function generateCards(numCards) {
+    var cardList = ""; // initialize blank string to append to
+    var currentCard = ""; // initialize blank string to append to
+
+    for (i = 1; i <= numCards; i++) {
+        var randomNumberList = [
+            [], // B
+            [], // I
+            [], // N
+            [], // G
+            []  // O
+        ];
+        console.log(i);
+        currentCard = "<section id='card" + i + "' class='playerCard'>";
+
+        for (letter = 0; letter < bingo.length; letter++) {
+            currentCard += "<button class='titleCell'>" + bingo[letter].toUpperCase() + "</button>";
+        }
+
+        // shuffle the master list
+        for (shuffle = 0; shuffle < bingo.length; shuffle++) {
+            shuffleArray(bingoNumbersMasterList[shuffle])
+        }
+        console.log(bingoNumbersMasterList)
+        for (space = 0; space < 25; space++) {
+            console.log(space);
+            console.log(space % 5);
+
+            var randomNumber = cardNum();
+            if (space != 12) {
+                // NORMAL SPACE
+                currentCard += "<button class='playerGridCell' id='" + i + "_" + randomNumber + "'>" + bingoNumbersMasterList[space % 5][space] + "</button>";
+            } else {
+                // FREE SPACE
+                // document.getElementById("nSlot3").innerHTML = "FREE";
+                currentCard += "<button class='playerGridCell free' id='" + i + "_free'>FREE</button>";
+            }
+        }
+        currentCard += "</section>";
+
+        console.log(randomNumberList);
+
+        // document.getElementsByClassName('cardContents')[0].innerHTML += pCardGrid;
+        cardList += currentCard;
+    }
+    // console.log(cardList);
+    document.getElementById("cards").innerHTML = cardList;
 }
 
 createRanges();
 makeGrid();
+    
+// generate cards
+generateCards(cardsToGenerate);
