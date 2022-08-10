@@ -8,56 +8,48 @@ var bingoNumbersMasterList = [
     [], // G
     []  // O
 ];
-var playerCardNumberList = [
-    [], // B
-    [], // I
-    [], // N
-    [], // G
-    []  // O
-];
 
 /* Generate new random number, update current BINGO number button display, and mark called number in master list */
 
-// creates range list from given start and stop values (int)
-function makeRange(start, end) {
-    return Array(end - start + 1).fill().map((_, idx) => start + idx);
-};
-
-// generates a random number to call
+// generates a random number to call for the master button
 function cardNum() {
     // Needs to get and send numbers based on letter ranges
     var num = Math.floor(Math.random() * 75) + 1;
     return num;
 };
 
-// generates random number lists
-function playerCardNumberGeneration() {
-    var playerNumB
-    var playerNumI
-    var playerNumN
-    var playerNumG
-    var playerNumO
-    for (i = 0; i < 5; i++) {
-        playerNumB = (Math.floor(Math.random() * (15 - 1 + 1)) + 1);
-        playerNumI = (Math.floor(Math.random() * (30 - 16 + 1)) + 16);
-        playerNumN = (Math.floor(Math.random() * (45 - 31 + 1)) + 31);
-        playerNumG = (Math.floor(Math.random() * (60 - 46 + 1)) + 46);
-        playerNumO = (Math.floor(Math.random() * (75 - 61 + 1)) + 61);
+// creates range list from given start and stop values (int)
+function makeRange(start, end) {
+    return Array(end - start + 1).fill().map((_, idx) => start + idx);
+};
 
-        playerCardNumberList[0][i] = playerNumB;
-        playerCardNumberList[1][i] = playerNumI;
-        playerCardNumberList[2][i] = playerNumN;
-        playerCardNumberList[3][i] = playerNumG;
-        playerCardNumberList[4][i] = playerNumO;
-        console.log(playerNumB);
-    }
-    console.log(playerCardNumberList);
-}
+// generates random number lists
+// function playerCardNumberGeneration() {
+//     var playerNumB = (Math.floor(Math.random() * (15 - 1 + 1)) + 1);
+//     var playerNumI = (Math.floor(Math.random() * (30 - 16 + 1)) + 16);
+//     var playerNumN = (Math.floor(Math.random() * (45 - 31 + 1)) + 31);
+//     var playerNumG = (Math.floor(Math.random() * (60 - 46 + 1)) + 46);
+//     var playerNumO = (Math.floor(Math.random() * (75 - 61 + 1)) + 61);
+//     for (i = 0; i < 5; i++) {
+//         playerNumB += [(Math.floor(Math.random() * (15 - 1 + 1)) + 1)];
+//         playerNumI += [(Math.floor(Math.random() * (30 - 16 + 1)) + 16)];
+//         playerNumN += [(Math.floor(Math.random() * (45 - 31 + 1)) + 31)];
+//         playerNumG += [(Math.floor(Math.random() * (60 - 46 + 1)) + 46)];
+//         playerNumO += [(Math.floor(Math.random() * (75 - 61 + 1)) + 61)];
+
+//         playerCardNumberList[i] = playerNumB;
+//         playerCardNumberList[i] = playerNumI;
+//         playerCardNumberList[i] = playerNumN;
+//         playerCardNumberList[i] = playerNumG;
+//         playerCardNumberList[i] = playerNumO;
+//         console.log(playerNumB);
+//     }
+//     console.log(playerCardNumberList);
+// }
 
 // updates called number button value
 function updateNum() {
-    var num = cardNum();
-    document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + num + "</button>";
+    document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + cardNum() + "</button>";
     updateRange();
 };
 
@@ -135,35 +127,30 @@ function makeGrid() {
         "<button class='titleCell'>G</button>" +
         "<button class='titleCell'>O</button>" 
     ); // card title
-    
-    // generates the list of player card slots
+        
     for (i = 1; i < 26; i++) {
-        pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + cardNum() + "</button>";
+        if (i < 6 ) {
+            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (15 - 1 + 1)) + 1) + "</button>";
+        }
+        if (i < 11 && i > 5) {
+            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (30 - 16 + 1)) + 16) + "</button>";
+        }
+        if (i < 16 && i > 10) {
+            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (45 - 31 + 1)) + 31) + "</button>";
+        }
+        if (i < 21 && i > 15) {
+            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (60 - 46 + 1)) + 46) + "</button>";
+        }
+        if (i < 26 && i > 20) {
+            pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + (Math.floor(Math.random() * (75 - 61 + 1)) + 61) + "</button>";
+        }
     }
+    // pCardGrid = "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + test + "</button>"
 
-    // for (i = 1; i < 25; i++) {
-    //     var i = i
-
-    //     if (i < 5 ) {
-    //         pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + playerCardNumberList[0][i] + "</button>";
-    //     }
-    //     if (i < 10 ) {
-    //         pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + playerCardNumberList[1][i] + "</button>";
-    //     }
-    //     if (i < 15 ) {
-    //         pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + playerCardNumberList[2][i] + "</button>";
-    //     }
-    //     if (i < 20 ) {
-    //         pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + playerCardNumberList[3][i] + "</button>";
-    //     }
-    //     if (i < 25 ) {
-    //         pCardGrid += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot" + i + "'>" + playerCardNumberList[4][i] + "</button>";
-    //     }
-    // }
+    // document.getElementsByClassName('cardContents')[0].innerHTML += "<button class='playerGridCell' onclick='markSpace(this.id)' id='slot1'>" + playerCardNumberList[0][0] + "</button>";
     document.getElementsByClassName('cardContents')[0].innerHTML += pCardGrid;
     document.querySelector("#slot13").innerHTML = "FREE";
 }
 
 createRanges();
 makeGrid();
-playerCardNumberGeneration();
