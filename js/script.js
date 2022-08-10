@@ -10,15 +10,25 @@ var bingoNumbersMasterList = [
     [], // G
     []  // O
 ];
-
+var callList = [];
+var masterButtonList;
 // number of cards to generate
 var cardsToGenerate = 3;
+var iter = 1
 
 /* Generate new random number, update current BINGO number button display, and mark called number in master list */
 
+// generates the full range for the master list button
+function rolledNumRange() {
+    for (i = 1; i < 76; i++) {
+        callList.push(i);
+    }
+    shuffleArray(callList);
+    console.log(callList);
+}
+
 // generates a random number to call for the master button
 function cardNum() {
-    // Needs to get and send numbers based on letter ranges
     var num = Math.floor(Math.random() * 75) + 1;
     return num;
 };
@@ -31,14 +41,24 @@ function makeRange(start, end) {
 // updates called number button value
 function updateNum() {
     // TODO: Prevent rolling numbers that were already called
-    document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + cardNum() + "</button>";
-    updateRange();
+    if (callList.length != 1) {
+    document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + callList[0] + "</button>";
+    document.getElementById("master" + callList[0]).style.backgroundColor = "red";
+    callList.splice(0, 1)
+    iter += 1;
+    } else {
+        document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='reset()'>Oops!</button>";
+        // document.getElementsByClassName("cardNumRange").style.backgroundColor = "red";
+        document.getElementById("master" + callList[0]).className = "red";
+
+    }
+    console.log(callList);
 };
 
-// change called number in master list to red background
-function updateRange() {
-    document.getElementById("master" + document.getElementById("displayNum").innerHTML).style.backgroundColor = "red";
-};
+// reloads the page
+function reset() {
+    location.reload();
+}
 
 /* Create master number list and generate the master grid & player cards */
 
@@ -81,7 +101,6 @@ function createRanges() {
         var range = makeRange(start, stop);
         bingoNumbersMasterList[i] = range;
     }
-    // console.log(bingoNumbersMasterList);
 }
 
 // generates called number button, master number list and player cards
@@ -94,6 +113,7 @@ function makeGrid() {
     for (i = 1; i < 76; i++) { 
         masterList += "<button class='cardNumRange' id='master" + i + "'>" + i + "</button>";
     }
+
     document.getElementById('displayBoard').innerHTML = masterList;
 }
 
@@ -126,9 +146,10 @@ function generateCards(numCards) {
 
         // shuffle the master list
         for (shuffle = 0; shuffle < bingo.length; shuffle++) {
-            shuffleArray(bingoNumbersMasterList[shuffle])
+            shuffleArray(bingoNumbersMasterList[shuffle]);
         }
 
+        // separate columns into arrays
         for (newLetter = 0; newLetter < bingo.length; newLetter++) {
             randomNumberList[newLetter] = bingoNumbersMasterList[newLetter].slice(0,5);
         }
@@ -136,24 +157,22 @@ function generateCards(numCards) {
         for (space = 0; space < 25; space++) {
             if (space != 12) {
                 // NORMAL SPACE
+                // console.log(callList);
                 currentCard += "<button class='playerGridCell' id='" + i + "_" + randomNumberList[space % 5][Math.floor(space / 5)] + "' onclick=''>" + randomNumberList[space % 5][Math.floor(space / 5)] + "</button>"; // TODO: Add an onclick event to the card buttons
             } else {
                 // FREE SPACE
                 currentCard += "<button class='playerGridCell free' id='" + i + "_free'>FREE</button>";
             }
         }
+
         currentCard += "</section>";
-
-        console.log(randomNumberList);
-
         cardList += currentCard;
     }
 
     document.getElementById("cards").innerHTML = cardList;
 }
-
+rolledNumRange();
 createRanges();
 makeGrid();
-    
 // generate cards
 generateCards(cardsToGenerate);
