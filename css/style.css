@@ -23,6 +23,18 @@ body {
     background-color: rgb(154, 4, 4);
 }
 
+.gameOver {
+    max-width: 400px;
+    font-size: 2em !important;
+    animation: game 5s infinite;
+    animation-delay: 10s;
+}
+
+@keyframes game {
+    50% {background-color: rgb(255, 0, 0);}
+    100% {transform: rotate(360deg);}
+  }
+
 .cardNumRange {
     font-size: 2rem;
 }
@@ -72,4 +84,6 @@ body {
 #currentNum {
     text-align: center;
     margin: 0 auto;
+    max-width: 400px;
 }
+
