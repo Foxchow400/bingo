@@ -38,8 +38,10 @@ var masterCallList = [];
 var masterButtonList;
 var turnCounter = 0;
 // number of cards to generate
-var cardsToGenerate = 1;
+var cardsToGenerate = 21;
 var cardValue = [];
+var gameOver = 0;
+var winner = "";
 
 /* Generate new random number, update current BINGO number button display, and mark called number in master list */
 
@@ -161,7 +163,7 @@ function generateCards(numCards) {
         cardValue.push([]);
 
         for (letter = 0; letter < bingo.length; letter++) {
-            currentCard += "<button onclick='checkWin()' class='titleCell'>" + bingo[letter].toUpperCase() + "</button>";
+            currentCard += "<button onclick='checkWin(this.id)' id='" + i + "' class='titleCell'>" + bingo[letter].toUpperCase() + "</button>";
         }
 
         // shuffle the master list
@@ -223,17 +225,70 @@ function handleClick(id) {
 }
 
 /* Checks that there is or is not a winner */
-function checkWin() {
+function checkWin(calledCard) {
     var activeCard = "";
     var activeSolution = [];
     // for each card
     for (i = 0; i < cardsToGenerate; i++) {
+        var elementSelector = 0;
         activeCard = document.getElementById("card" + (i + 1)).getElementsByClassName("playerGridCell");
         console.log(activeCard);
         // console.log(document.getElementById("card" + (i + 1)).getElementsByClassName("red"));
         var selectedButtons = document.getElementById("card" + (i + 1)).getElementsByClassName("red")
         console.log(selectedButtons);
-        // use turnCounter as an index for the 
+        console.log(solutionList)
+        var currentCallList = masterCallList
+        currentCallList = currentCallList.slice(0, turnCounter)
+        
+        for (solution = 0; solution < solutionList.length; solution++) {
+            var legalSolution = solutionList[solution];
+            activeSolution = [];
+            console.log(legalSolution)
+            // individually print each num in the solution
+            for (currentNum = 0; currentNum < legalSolution.length; currentNum++) {
+                // console.log(currentNum);
+                // console.log(legalSolution[currentNum]);
+                // console.log("---");
+                // console.log(activeCard);
+                // console.log(activeCard[legalSolution[currentNum]].id);
+                // console.log(isRed(activeCard[legalSolution[currentNum]].id));
+                // get a list of numbers that the playerCard has, order included
+
+                activeSolution.push(activeCard[legalSolution[currentNum]].id)
+
+            }
+            console.log(activeSolution)
+
+            for (elementSelector = 0; elementSelector < legalSolution.length; elementSelector++) {
+                console.log(activeSolution[elementSelector])
+                // is it red?
+                console.log("Is it selected?")
+                console.log(isRed(activeSolution[elementSelector]))
+                console.log(selectedButtons)
+                console.log(elementSelector)
+                // is it valid?
+                console.log(document.getElementById(activeSolution[elementSelector]).innerHTML)
+                if (
+                    // add the win combos 
+                    document.getElementById(activeSolution[elementSelector]).innerHTML in currentCallList
+                ) {
+                    console.log("BINGO! Card  wins!")
+                    winner = calledCard;
+                    gameOver = 1;
+                } else {
+                //  clears wrong solutions/buttons
+                    clearWrongMarks();
+                    console.log("Better luck next time! Clearing erroneous marks...")
+                }
+            }
+        }
+
+
+
+        function clearWrongMarks() {
+            console.log("erase");
+        }
+        
         //TODO: Make arrays of solutions vs possible solutions 
         /*
         
@@ -260,69 +315,10 @@ function checkWin() {
             ]
 
         */ 
-        console.log(solutionList)
-        var currentCallList = masterCallList
-        currentCallList = currentCallList.slice(0, turnCounter)
         
-        for (solution = 0; solution < solutionList.length; solution++) {
-            var legalSolution = solutionList[solution];
-            activeSolution = [];
-            console.log(legalSolution)
-            // individually print each num in the solution
-            for (currentNum = 0; currentNum < legalSolution.length; currentNum++) {
-                // console.log(currentNum);
-                // console.log(legalSolution[currentNum]);
-                // console.log("---");
-                // console.log(activeCard);
-                // console.log(activeCard[legalSolution[currentNum]].id);
-                // console.log(isRed(activeCard[legalSolution[currentNum]].id));
-                // get a list of numbers that the playercard has, order included
-                // 
-
-                activeSolution.push(activeCard[legalSolution[currentNum]].id)
-
-            }
-            console.log(activeSolution)
-
-            for (elementSelector = 0; elementSelector < legalSolution.length; elementSelector++) {
-                console.log(activeSolution[elementSelector])
-                console.log(document.getElementById(activeSolution[elementSelector]).innerHTML)
-                console.log("Is it legal?")
-                console.log(document.getElementById(activeSolution[elementSelector]).innerHTML in currentCallList)
-                console.log("Is it selected?")
-                console.log(isRed(activeSolution[elementSelector]))
-            }
+        if (gameOver) {
+            alert("CARD " + winner + " WINS!")
         }
-
-
-        // is it red?
-        function checkRedSolution() {
-            console.log(selectedButtons)
-            // are the buttons red in the solution?
-            if (true) {
-                checkValidSolution();
-            } else {
-                //clears wrong solutions/buttons
-                clearWrongMarks();
-            }
-        }
-        checkRedSolution();
-
-        function clearWrongMarks() {
-            console.log("erase");
-        }
-
-        function checkValidSolution() {
-            // console.log(selectedButtons)
-            // is it valid?
-            if (true) {
-                console.log("BINGO! Card X wins!")
-            } else {
-                //clears wrong solutions/buttons
-                console.log("Better luck next time! Clearing erroneous marks...")
-            }
-        }
-        
     }
     
 }
