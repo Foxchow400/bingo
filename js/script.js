@@ -10,11 +10,35 @@ var bingoNumbersMasterList = [
     [], // G
     []  // O
 ];
+        
+var solutionList = [
+
+    // rows
+    [0,   1,  2,  3,  4],
+    [5,   6,  7,  8,  9],
+    [10, 11, 12, 13, 14],
+    [15, 16, 17, 18, 19],
+    [20, 21, 22, 23, 24],
+
+    // columns
+    [0, 5, 10, 15, 20],
+    [1, 6, 11, 16, 21],
+    [2, 7, 12, 17, 22],
+    [3, 8, 13, 18, 23],
+    [4, 9, 14, 19, 24],
+
+    // obliques
+    [0, 6, 12, 18, 24],
+    [4, 8, 12, 16, 20]
+
+];
+
 var callList = [];
 var masterButtonList;
+var turnCounter = 0;
 // number of cards to generate
-var cardsToGenerate = 3;
-var iter = 1
+var cardsToGenerate = 1;
+var cardValue = [];
 
 /* Generate new random number, update current BINGO number button display, and mark called number in master list */
 
@@ -24,34 +48,32 @@ function rolledNumRange() {
         callList.push(i);
     }
     shuffleArray(callList);
-    console.log(callList);
 }
 
 // generates a random number to call for the master button
 function cardNum() {
     var num = Math.floor(Math.random() * 75) + 1;
     return num;
-};
+}
 
 // creates range list from given start and stop values (int)
 function makeRange(start, end) {
     return Array(end - start + 1).fill().map((_, idx) => start + idx);
-};
+}
 
 // updates called number button value
 function updateNum() {
-    // TODO: Prevent rolling numbers that were already called
+
     if (callList.length != 1) {
-        document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + callList[0] + "</button>";
+        document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='turnCounter++;updateNum()'>" + callList[0] + "</button>";
         document.getElementById("master" + callList[0]).style.backgroundColor = "red";
-        callList.splice(0, 1)
-        iter += 1;
+        callList.splice(0, 1);
     } else {
         document.getElementById('currentNum').innerHTML = "<button class='gameOver' id='displayNum' onclick='reset()'>Game Over!</button>";
         document.getElementById("master" + callList[0]).className = "red";
     }
-    console.log(callList);
-};
+    // console.log(callList);
+}
 
 // reloads the page
 function reset() {
@@ -64,7 +86,7 @@ function reset() {
 function markSpace(id) {
     // document.getElementsByClassName("o")[id / 5 - 1].innerHTML = 1;
     console.log(id);
-};
+}
 
 // generates master number range lists
 function createRanges() {
@@ -134,9 +156,10 @@ function generateCards(numCards) {
             []  // O
         ];
         currentCard = "<section id='card" + i + "' class='playerCard'>";
+        cardValue.push([]);
 
         for (letter = 0; letter < bingo.length; letter++) {
-            currentCard += "<button class='titleCell'>" + bingo[letter].toUpperCase() + "</button>";
+            currentCard += "<button onclick='checkWin()' class='titleCell'>" + bingo[letter].toUpperCase() + "</button>";
         }
 
         // shuffle the master list
@@ -152,19 +175,138 @@ function generateCards(numCards) {
         for (space = 0; space < 25; space++) {
             if (space != 12) {
                 // NORMAL SPACE
-                currentCard += "<button class='playerGridCell' id='" + i + "_" + randomNumberList[space % 5][Math.floor(space / 5)] + "' onclick=''>" + randomNumberList[space % 5][Math.floor(space / 5)] + "</button>"; // TODO: Add an onclick event to the card buttons
+                currentCard += "<button class='playerGridCell' id='" + i + "_" + randomNumberList[space % 5][Math.floor(space / 5)] + "' onclick='handleClick(this.id)'>" + randomNumberList[space % 5][Math.floor(space / 5)] + "</button>";
+
+                // pushes the values of this card to an array so it can be reverted when there is a faulty win
+                cardValue[i - 1].push(randomNumberList[space % 5][Math.floor(space / 5)])
+
+                // TODO: Add an onclick event to the card buttons, make it check that there is or is not a winner
             } else {
                 // FREE SPACE
-                currentCard += "<button class='playerGridCell free' id='" + i + "_free'>FREE</button>";
+                currentCard += "<button class='playerGridCell free' id='" + i + "_0' onclick='handleClick(this.id)'>FREE</button>";
+                cardValue[i - 1].push(0)
+                // TODO: Make a function that does something to the free button when clicked
+            }
+        }
+                    
+        currentCard += "</section>";
+        cardList += currentCard;
+
+    }
+    document.getElementById("cards").innerHTML = cardList;
+    // console.log(cardList)
+    // console.log(randomNumberList)
+}
+
+function isRed(id) {
+    return document.getElementById(id).className.match(/(?:^|\s)red(?!\S)/);
+}
+
+// handle click
+function handleClick(id) {
+    var [checkCard, checkValue] = [id.split("_")[0], id.split("_")[1]];
+
+    if (isRed(id)) {
+        // remove red
+        document.getElementById(id).className = "playerGridCell";
+    } else {
+        // add red
+        document.getElementById(id).className = "playerGridCell red";
+    }
+}
+
+/* Checks that there is or is not a winner */
+function checkWin() {
+    var activeCard = "";
+    // for each card
+    for (i = 0; i < cardsToGenerate; i++) {
+        activeCard = document.getElementById("card" + (i + 1)).getElementsByClassName("playerGridCell");
+        console.log(activeCard);
+        // console.log(document.getElementById("card" + (i + 1)).getElementsByClassName("red"));
+        var selectedButtons = document.getElementById("card" + (i + 1)).getElementsByClassName("red")
+        console.log(selectedButtons);
+        // use turnCounter as an index for the 
+        //TODO: Make arrays of solutions vs possible solutions 
+        /*
+        
+            var solutionList = [
+
+                // rows
+                [0,   1,  2,  3,  4],
+                [5,   6,  7,  8,  9],
+                [10, 11, 12, 13, 14],
+                [15, 16, 17, 18, 19],
+                [20, 21, 22, 23, 24],
+
+                // columns
+                [0, 5, 10, 15, 20],
+                [1, 6, 11, 16, 21],
+                [2, 7, 12, 17, 22],
+                [3, 8, 13, 18, 23],
+                [4, 9, 14, 19, 24],
+
+                // obliques
+                [0, 6, 12, 18, 24],
+                [4, 8, 12, 16, 20]
+
+            ]
+
+        */ 
+
+        var currentCallList = callList.slice(0, turnCounter)
+        
+        for (solution = 0; solution < solutionList.length; solution++) {
+            var legalSolution = solutionList[solution];
+            console.log(legalSolution)
+            // individually print each num in the solution
+            for (currentNum = 0; currentNum < legalSolution.length; currentNum++) {
+                console.log(currentNum);
+                console.log(legalSolution[currentNum]);
+                console.log("---");
+                console.log(activeCard);
+                console.log(activeCard[legalSolution[currentNum]].id);
+                console.log(isRed(activeCard[legalSolution[currentNum]].id));
+                // get a list of numbers that the playercard has, order included
+                // 
+
             }
         }
 
-        currentCard += "</section>";
-        cardList += currentCard;
-    }
 
-    document.getElementById("cards").innerHTML = cardList;
+        // is it red?
+        function checkRedSolution() {
+            console.log(selectedButtons)
+            // are the buttons red in the solution?
+            if (true) {
+                checkValidSolution();
+            } else {
+                //clears wrong solutions/buttons
+                clearWrongMarks();
+            }
+        }
+        checkRedSolution();
+
+        function clearWrongMarks() {
+            console.log("erase");
+        }
+
+        function checkValidSolution() {
+            // console.log(selectedButtons)
+            // is it valid?
+            if (true) {
+                console.log("BINGO! Card X wins!")
+            } else {
+                //clears wrong solutions/buttons
+                console.log("Better luck next time! Clearing erroneous marks...")
+            }
+        }
+        
+    }
+    
 }
+
+
+
 rolledNumRange();
 createRanges();
 // generate cards
