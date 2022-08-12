@@ -34,6 +34,7 @@ var solutionList = [
 ];
 
 var callList = [];
+var masterCallList = [];
 var masterButtonList;
 var turnCounter = 0;
 // number of cards to generate
@@ -67,6 +68,7 @@ function updateNum() {
     if (callList.length != 1) {
         document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='turnCounter++;updateNum()'>" + callList[0] + "</button>";
         document.getElementById("master" + callList[0]).style.backgroundColor = "red";
+        masterCallList.push(callList[0])
         callList.splice(0, 1);
     } else {
         document.getElementById('currentNum').innerHTML = "<button class='gameOver' id='displayNum' onclick='reset()'>Game Over!</button>";
@@ -126,7 +128,7 @@ function createRanges() {
 // generates called number button, master number list and player cards
 function makeGrid() {
     var masterList = "";
-    document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()'>" + cardNum() + "</button>";
+    document.getElementById('currentNum').innerHTML = "<button id='displayNum' onclick='updateNum()' style='font-size: 5em;'>" + "GO" + "</button>";
     // generates the list for the master list
     for (i = 1; i < 76; i++) { 
         masterList += "<button class='cardNumRange' id='master" + i + "'>" + i + "</button>";
@@ -199,7 +201,12 @@ function generateCards(numCards) {
 }
 
 function isRed(id) {
-    return document.getElementById(id).className.match(/(?:^|\s)red(?!\S)/);
+    // console.log(id)
+    if (document.getElementById(id).className.match(/(?:^|\s)red(?!\S)/) == null) {
+        return false
+    } else {
+        return true
+    }
 }
 
 // handle click
@@ -218,6 +225,7 @@ function handleClick(id) {
 /* Checks that there is or is not a winner */
 function checkWin() {
     var activeCard = "";
+    var activeSolution = [];
     // for each card
     for (i = 0; i < cardsToGenerate; i++) {
         activeCard = document.getElementById("card" + (i + 1)).getElementsByClassName("playerGridCell");
@@ -252,23 +260,37 @@ function checkWin() {
             ]
 
         */ 
-
-        var currentCallList = callList.slice(0, turnCounter)
+        console.log(solutionList)
+        var currentCallList = masterCallList
+        currentCallList = currentCallList.slice(0, turnCounter)
         
         for (solution = 0; solution < solutionList.length; solution++) {
             var legalSolution = solutionList[solution];
+            activeSolution = [];
             console.log(legalSolution)
             // individually print each num in the solution
             for (currentNum = 0; currentNum < legalSolution.length; currentNum++) {
-                console.log(currentNum);
-                console.log(legalSolution[currentNum]);
-                console.log("---");
-                console.log(activeCard);
-                console.log(activeCard[legalSolution[currentNum]].id);
-                console.log(isRed(activeCard[legalSolution[currentNum]].id));
+                // console.log(currentNum);
+                // console.log(legalSolution[currentNum]);
+                // console.log("---");
+                // console.log(activeCard);
+                // console.log(activeCard[legalSolution[currentNum]].id);
+                // console.log(isRed(activeCard[legalSolution[currentNum]].id));
                 // get a list of numbers that the playercard has, order included
                 // 
 
+                activeSolution.push(activeCard[legalSolution[currentNum]].id)
+
+            }
+            console.log(activeSolution)
+
+            for (elementSelector = 0; elementSelector < legalSolution.length; elementSelector++) {
+                console.log(activeSolution[elementSelector])
+                console.log(document.getElementById(activeSolution[elementSelector]).innerHTML)
+                console.log("Is it legal?")
+                console.log(document.getElementById(activeSolution[elementSelector]).innerHTML in currentCallList)
+                console.log("Is it selected?")
+                console.log(isRed(activeSolution[elementSelector]))
             }
         }
 
